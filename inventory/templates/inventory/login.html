@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login | Inventory System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Animated background elements */
+    body::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: float 20s ease-in-out infinite;
+      z-index: 0;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateX(0) translateY(0) rotate(0deg); }
+      33% { transform: translateX(30px) translateY(-30px) rotate(120deg); }
+      66% { transform: translateX(-20px) translateY(20px) rotate(240deg); }
+    }
+
+    .login-container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      padding: 3rem 2.5rem;
+      border-radius: 24px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+      width: 100%;
+      max-width: 420px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+      z-index: 1;
+      animation: slideUp 0.8s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .logo-section {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .logo-icon {
+      font-size: 3rem;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 0.5rem;
+      color: #2d3748;
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #718096;
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #a0aec0;
+      font-size: 1.1rem;
+      z-index: 2;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 1rem 1rem 1rem 3rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.8);
+      color: #2d3748;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      background: white;
+    }
+
+    input[type="text"]:focus + .input-icon,
+    input[type="password"]:focus + .input-icon {
+      color: #667eea;
+    }
+
+    button {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border: none;
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    button:hover::before {
+      left: 100%;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .error {
+      color: #e53e3e;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      padding: 0.75rem;
+      background: rgba(229, 62, 62, 0.1);
+      border-radius: 8px;
+      border: 1px solid rgba(229, 62, 62, 0.2);
+      font-weight: 500;
+      display: none;
+    }
+
+    .error.show {
+      display: block;
+      animation: shake 0.5s ease-in-out;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    .signup-link {
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .signup-link {
+      color: #718096;
+      font-size: 0.95rem;
+    }
+
+    .signup-link a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    .signup-link a:hover {
+      color: #764ba2;
+      text-decoration: underline;
+    }
+
+    /* Loading state */
+    .loading {
+      position: relative;
+      color: transparent;
+    }
+
+    .loading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top: 2px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* Responsive design */
+    @media (max-width: 480px) {
+      .login-container {
+        margin: 1rem;
+        padding: 2rem 1.5rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      .logo-icon {
+        font-size: 2.5rem;
+      }
+    }
+
+    /* Success state */
+    .success {
+      color: #38a169;
+      background: rgba(56, 161, 105, 0.1);
+      border: 1px solid rgba(56, 161, 105, 0.2);
+      padding: 0.75rem;
+      border-radius: 8px;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+      display: none;
+    }
+
+    .success.show {
+      display: block;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="logo-section">
+      <i class="fas fa-boxes logo-icon"></i>
+      <h2>Welcome Back</h2>
+      <p class="subtitle">Sign in to your inventory dashboard</p>
+    </div>
+
+    <div id="error" class="error"></div>
+    <div id="success" class="success"></div>
+
+    <div class="input-group">
+      <input type="text" id="username" placeholder="Enter your username" required />
+      <i class="fas fa-user input-icon"></i>
+    </div>
+
+    <div class="input-group">
+      <input type="password" id="password" placeholder="Enter your password" required />
+      <i class="fas fa-lock input-icon"></i>
+    </div>
+
+    <button id="loginBtn" onclick="handleLogin()">
+      <i class="fas fa-sign-in-alt"></i> Sign In
+    </button>
+
+    <div class="signup-link">
+      Don't have an account? <a href="/signup/">Create one here</a>
+    </div>
+  </div>
+
+  <script>
+    // Add enter key support
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('username').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          document.getElementById('password').focus();
+        }
+      });
+
+      document.getElementById('password').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          handleLogin();
+        }
+      });
+    });
+
+    async function handleLogin() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const errorDiv = document.getElementById("error");
+      const successDiv = document.getElementById("success");
+      const loginBtn = document.getElementById("loginBtn");
+
+      // Clear previous messages
+      errorDiv.textContent = "";
+      errorDiv.classList.remove("show");
+      successDiv.classList.remove("show");
+
+      if (!username || !password) {
+        showError("Please enter both username and password.");
+        return;
+      }
+
+      // Show loading state
+      loginBtn.classList.add("loading");
+      loginBtn.disabled = true;
+
+      try {
+        const response = await fetch("/api/token/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ username, password }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          localStorage.setItem("access", data.access);
+          localStorage.setItem("refresh", data.refresh);
+          
+          // Show success message
+          successDiv.textContent = "Login successful! Redirecting...";
+          successDiv.classList.add("show");
+          
+          // Redirect after short delay
+          setTimeout(() => {
+            window.location.href = "/dashboard/";
+          }, 1000);
+        } else {
+          const errData = await response.json();
+          showError(errData.detail || "Invalid credentials.");
+        }
+      } catch (error) {
+        showError("Network error. Please try again.");
+      } finally {
+        // Remove loading state
+        loginBtn.classList.remove("loading");
+        loginBtn.disabled = false;
+      }
+    }
+
+    function showError(message) {
+      const errorDiv = document.getElementById("error");
+      errorDiv.textContent = message;
+      errorDiv.classList.add("show");
+    }
+  </script>
+</body>
+</html>
